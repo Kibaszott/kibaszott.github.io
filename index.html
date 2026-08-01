@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!--
+    ============================================================
+    BASIC WEBSITE INFORMATION
+    ============================================================
+    -->
+
+    <!-- Allows normal letters, punctuation and special characters -->
+    <meta charset="UTF-8">
+
+    <!-- Makes the website resize correctly on phones and tablets -->
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <!--
+    This is the title shown on the browser tab.
+
+    Change only the words between <title> and </title>.
+    -->
+    <title>Mathew's Personal Website</title>
+
+    <!--
+    This short description may be used by search engines.
+    Change the sentence inside content="...".
+    -->
+    <meta
+        name="description"
+        content="A personal website for blog posts, short stories, writings and miscellaneous work."
+    >
+
+    <style>
+        /*
+        ============================================================
+        COLOUR SETTINGS
+        ============================================================
+
+        These variables make it easier to change the entire colour
+        scheme later.
+
+        For now, the website uses black and white.
+
+        Example:
+        --background-colour: white;
+        --text-colour: black;
+        */
+
+        :root {
+            --background-colour: #ffffff;
+            --text-colour: #000000;
+            --banner-colour: #000000;
+            --banner-text-colour: #ffffff;
+            --border-colour: #000000;
+            --subtle-border-colour: #d6d6d6;
+
+            /*
+            Change this number to make the top banner taller
+            or shorter on desktop.
+            */
+            --banner-height: 80px;
+
+            /*
+            Change this number to make the top banner taller
+            or shorter on phones.
+            */
+            --mobile-banner-height: 65px;
+        }
+
+
+        /*
+        ============================================================
+        GENERAL WEBSITE SETTINGS
+        ============================================================
+        */
+
+        /*
+        Makes width and height calculations more predictable.
+        You generally do not need to change this.
+        */
+        * {
+            box-sizing: border-box;
+        }
+
+        /*
+        Makes menu links scroll smoothly to sections.
+        */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            /*
+            Removes the default space around the outside
+            of the webpage.
+            */
+            margin: 0;
+
+            /* Main page colours */
+            background-color: var(--background-colour);
+            color: var(--text-colour);
+
+            /*
+            Main website font.
+
+            Other simple options:
+
+            Georgia, "Times New Roman", serif;
+            Verdana, Arial, sans-serif;
+            */
+            font-family: Arial, Helvetica, sans-serif;
+
+            /*
+            Makes normal text easier to read.
+            */
+            line-height: 1.6;
+        }
+
+        /*
+        Gives keyboard users a visible outline when they
+        select buttons or links.
+        */
+        a:focus-visible,
+        button:focus-visible {
+            outline: 3px solid currentColor;
+            outline-offset: 3px;
+        }
+
+        /*
+        Prevents images from extending beyond the page width.
+        */
+        img {
+            max-width: 100%;
+        }
+
+
+        /*
+        ============================================================
+        FIXED TOP BANNER
+        ============================================================
+        */
+
+        .top-banner {
+            /*
+            Keeps the banner visible while the page scrolls.
+            */
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: var(--banner-height);
+
+            background-color: var(--banner-colour);
+            color: var(--banner-text-colour);
+
+            /*
+            Centres the website title inside the banner.
+            */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            /*
+            Keeps the banner above the rest of the page.
+            */
+            z-index: 1000;
+
+            border-bottom: 1px solid var(--banner-text-colour);
+        }
+
+        .site-title {
+            margin: 0;
+
+            /*
+            Change this number to make the banner title
+            larger or smaller.
+            */
+            font-size: 24px;
+
+            font-weight: normal;
+
+            /*
+            Controls spacing between letters.
+            */
+            letter-spacing: 3px;
+
+            /*
+            Delete this line if you do not want the title
+            automatically displayed in uppercase.
+            */
+            text-transform: uppercase;
+
+            /*
+            Stops the title from sitting underneath the menu button
+            on smaller screens.
+            */
+            padding: 0 90px;
+
+            text-align: center;
+        }
+
+        /*
+        This makes the banner title act as a Home link.
+        */
+        .site-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+
+        /*
+        ============================================================
+        HAMBURGER MENU
+        ============================================================
+        */
+
+        .menu {
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            height: var(--banner-height);
+        }
+
+        .menu-button {
+            /*
+            Size of the clickable hamburger area.
+            */
+            width: var(--banner-height);
+            height: var(--banner-height);
+
+            padding: 0;
+
+            background-color: var(--banner-colour);
+            color: var(--banner-text-colour);
+
+            border: 0;
+            cursor: pointer;
+
+            /*
+            Arranges the three hamburger lines vertically.
+            */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            /*
+            Space between the three lines.
+            */
+            gap: 7px;
+        }
+
+        /*
+        These are the three lines inside the hamburger icon.
+        */
+        .menu-button span {
+            display: block;
+
+            /*
+            Change width to make the lines longer or shorter.
+            */
+            width: 30px;
+
+            /*
+            Change height to make the lines thicker or thinner.
+            */
+            height: 2px;
+
+            background-color: currentColor;
+
+            transition:
+                transform 0.25s ease,
+                opacity 0.25s ease;
+        }
+
+        /*
+        When the menu is open, the three lines change into an X.
+        */
+        .menu.is-open .menu-button span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        .menu.is-open .menu-button span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu.is-open .menu-button span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+
+        /*
+        ============================================================
+        DROPDOWN MENU
+        ============================================================
+        */
+
+        .dropdown {
+            position: absolute;
+
+            /*
+            Starts directly underneath the fixed banner.
+            */
+            top: var(--banner-height);
+            left: 0;
+
+            /*
+            Change this number to make the menu wider or narrower.
+            */
+            width: 230px;
+
+            margin: 0;
+            padding: 0;
+
+            list-style: none;
+
+            background-color: var(--banner-colour);
+            border-top: 1px solid var(--banner-text-colour);
+            border-right: 1px solid var(--banner-text-colour);
+
+            /*
+            These settings hide the dropdown when it is closed.
+            */
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+
+            transform: translateY(-10px);
+
+            transition:
+                opacity 0.2s ease,
+                visibility 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        /*
+        The menu opens in three situations:
+
+        1. The mouse hovers over it on a desktop computer.
+        2. A keyboard user focuses inside it.
+        3. JavaScript adds the class "is-open" after a click or tap.
+        */
+        .menu:hover .dropdown,
+        .menu:focus-within .dropdown,
+        .menu.is-open .dropdown {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+
+            transform: translateY(0);
+        }
+
+        .dropdown a {
+            display: block;
+
+            /*
+            First number = top and bottom spacing.
+            Second number = left and right spacing.
+            */
+            padding: 17px 22px;
+
+            color: var(--banner-text-colour);
+            text-decoration: none;
+
+            border-bottom: 1px solid #333333;
+
+            transition:
+                background-color 0.2s ease,
+                color 0.2s ease;
+        }
+
+        /*
+        Changes a menu item when it is hovered or selected.
+        */
+        .dropdown a:hover,
+        .dropdown a:focus {
+            background-color: var(--banner-text-colour);
+            color: var(--banner-colour);
+        }
+
+
+        /*
+        ============================================================
+        MAIN HOMEPAGE AREA
+        ============================================================
+        */
+
+        main {
+            /*
+            Stops the fixed banner covering the top of the page.
+            */
+            padding-top: var(--banner-height);
+        }
+
+        .hero {
+            /*
+            Gives the main section at least enough height to
+            fill the screen beneath the fixed banner.
+            */
+            min-height: calc(100vh - var(--banner-height));
+
+            /*
+            Controls the spacing around the homepage content.
+
+            First number = top and bottom.
+            Second number = left and right.
+            */
+            padding: 60px 30px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            width: 100%;
+
+            /*
+            Maximum total width of the central homepage area.
+            */
+            max-width: 900px;
+
+            text-align: center;
+        }
+
+        .main-image {
+            display: block;
+
+            width: 100%;
+
+            /*
+            Change this number to make the image's maximum
+            displayed size larger or smaller.
+            */
+            max-width: 650px;
+
+            /*
+            Keeps the image's original shape.
+            */
+            height: auto;
+
+            /*
+            Centres the image.
+            */
+            margin: 0 auto;
+
+            /*
+            Border around the image.
+
+            Delete this line if you do not want a border.
+            */
+            border: 2px solid var(--border-colour);
+        }
+
+        .introductory-text {
+            /*
+            Keeps the text the same maximum width as the image.
+            */
+            max-width: 650px;
+
+            /*
+            32px creates space above the text.
+            auto centres it left and right.
+            */
+            margin: 32px auto 0;
+        }
+
+        .introductory-text h2 {
+            margin-top: 0;
+            margin-bottom: 14px;
+
+            /*
+            Change this number to make the heading larger
+            or smaller.
+            */
+            font-size: 30px;
+
+            font-weight: normal;
+        }
+
+        .introductory-text p {
+            margin-top: 0;
+            margin-bottom: 18px;
+
+            /*
+            Change this number to make paragraph text larger
+            or smaller.
+            */
+            font-size: 18px;
+        }
+
+        /*
+        Optional link beneath the introduction.
+        */
+        .text-link {
+            color: var(--text-colour);
+            text-decoration-thickness: 1px;
+            text-underline-offset: 4px;
+        }
+
+        .text-link:hover {
+            text-decoration-thickness: 2px;
+        }
+
+
+        /*
+        ============================================================
+        FOOTER
+        ============================================================
+        */
+
+        .site-footer {
+            padding: 25px 20px;
+
+            text-align: center;
+
+            border-top: 1px solid var(--subtle-border-colour);
+
+            font-size: 14px;
+        }
+
+        .site-footer p {
+            margin: 0;
+        }
+
+
+        /*
+        ============================================================
+        MOBILE AND SMALL-SCREEN SETTINGS
+        ============================================================
+
+        These settings apply when the screen is 600px wide
+        or smaller.
+        */
+
+        @media (max-width: 600px) {
+            .top-banner {
+                height: var(--mobile-banner-height);
+            }
+
+            .menu {
+                height: var(--mobile-banner-height);
+            }
+
+            .menu-button {
+                width: var(--mobile-banner-height);
+                height: var(--mobile-banner-height);
+            }
+
+            .dropdown {
+                top: var(--mobile-banner-height);
+
+                /*
+                Makes the dropdown easier to use on a phone.
+                */
+                width: min(260px, 85vw);
+            }
+
+            .site-title {
+                font-size: 17px;
+                letter-spacing: 2px;
+
+                padding-left: 75px;
+                padding-right: 20px;
+            }
+
+            main {
+                padding-top: var(--mobile-banner-height);
+            }
+
+            .hero {
+                min-height: calc(100vh - var(--mobile-banner-height));
+
+                padding: 40px 20px;
+            }
+
+            .introductory-text h2 {
+                font-size: 25px;
+            }
+
+            .introductory-text p {
+                font-size: 16px;
+            }
+        }
+
+
+        /*
+        ============================================================
+        REDUCED MOTION SETTING
+        ============================================================
+
+        Some people configure their device to reduce animation.
+        This respects that preference.
+        */
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!--
+    ============================================================
+    FIXED TOP BANNER
+    ============================================================
+    -->
+
+    <header class="top-banner">
+
+        <!--
+        HAMBURGER NAVIGATION
+
+        aria-label describes the menu for screen readers.
+        -->
+        <nav
+            class="menu"
+            id="main-menu"
+            aria-label="Main navigation"
+        >
+
+            <!--
+            The three empty span elements create the three
+            horizontal hamburger lines.
+
+            Do not place words inside the span elements.
+            -->
+            <button
+                class="menu-button"
+                id="menu-button"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="dropdown-menu"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!--
+            ========================================================
+            WEBSITE MENU LINKS
+            ========================================================
+
+            These links expect the following future files:
+
+            about.html
+            blog.html
+            writings.html
+            miscellaneous.html
+
+            We can create those files afterwards.
+
+            To rename a visible menu item, change the words
+            between > and </a>.
+
+            Example:
+
+            <a href="about.html">About Me</a>
+            -->
+
+            <ul
+                class="dropdown"
+                id="dropdown-menu"
+            >
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+
+                <li>
+                    <a href="about.html">About Me</a>
+                </li>
+
+                <li>
+                    <a href="blog.html">Blog</a>
+                </li>
+
+                <li>
+                    <a href="writings.html">Writings</a>
+                </li>
+
+                <li>
+                    <a href="miscellaneous.html">Miscellaneous</a>
+                </li>
+            </ul>
+
+        </nav>
+
+        <!--
+        WEBSITE TITLE
+
+        Change only the words "Mathew's Website".
+
+        The title is also a link back to the homepage.
+        -->
+        <h1 class="site-title">
+            <a href="index.html">Mathew's Website</a>
+        </h1>
+
+    </header>
+
+
+    <!--
+    ============================================================
+    MAIN HOMEPAGE CONTENT
+    ============================================================
+    -->
+
+    <main>
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <!--
+                ====================================================
+                MAIN IMAGE
+                ====================================================
+
+                This currently expects an image at:
+
+                images/main-image.jpg
+
+                Later, your GitHub repository should contain:
+
+                index.html
+                images/
+                    main-image.jpg
+
+                To use a different filename, change:
+
+                src="images/main-image.jpg"
+
+                Example:
+
+                src="images/home-photo.png"
+
+                The alt text describes the image for accessibility.
+                Replace it with a brief and accurate description.
+                -->
+
+                <img
+                    class="main-image"
+                    src="images/main-image.jpg"
+                    alt="Main image for Mathew's personal website"
+                >
+
+
+                <!--
+                ====================================================
+                TEXT UNDERNEATH THE IMAGE
+                ====================================================
+
+                Change the heading and paragraph below.
+
+                Usually, only replace the words between the
+                opening and closing tags.
+                -->
+
+                <div class="introductory-text">
+
+                    <!-- Change this homepage heading -->
+                    <h2>Welcome</h2>
+
+                    <!-- Change this introductory paragraph -->
+                    <p>
+                        This is my personal website for blog posts,
+                        short stories, other writings and miscellaneous
+                        projects.
+                    </p>
+
+                    <!--
+                    This optional link leads to the About page.
+
+                    Delete the complete <p> section below if you do
+                    not want this link.
+                    -->
+                    <p>
+                        <a
+                            class="text-link"
+                            href="about.html"
+                        >
+                            Read more about me
+                        </a>
+                    </p>
+
+                    <!--
+                    To add another paragraph, copy this:
+
+                    <p>
+                        Write another paragraph here.
+                    </p>
+                    -->
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!--
+    ============================================================
+    FOOTER
+    ============================================================
+    -->
+
+    <footer class="site-footer">
+
+        <!--
+        Change the name if desired.
+
+        The year is automatically inserted by JavaScript,
+        so it will update without you editing it each year.
+        -->
+        <p>
+            &copy;
+            <span id="current-year"></span>
+            Mathew
+        </p>
+
+    </footer>
+
+
+    <script>
+        /*
+        ============================================================
+        HAMBURGER MENU CONTROLS
+        ============================================================
+
+        This JavaScript makes the menu work properly when clicked
+        or tapped.
+
+        It also:
+
+        - changes the hamburger icon into an X
+        - closes the menu when a link is selected
+        - closes the menu when clicking elsewhere
+        - closes the menu when pressing Escape
+
+        You generally do not need to edit this section.
+        */
+
+        const menu = document.getElementById("main-menu");
+        const menuButton = document.getElementById("menu-button");
+        const menuLinks = document.querySelectorAll("#dropdown-menu a");
+
+        /*
+        Opens or closes the menu.
+        */
+        function toggleMenu() {
+            const isOpen = menu.classList.toggle("is-open");
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                String(isOpen)
+            );
+
+            menuButton.setAttribute(
+                "aria-label",
+                isOpen
+                    ? "Close navigation menu"
+                    : "Open navigation menu"
+            );
+        }
+
+        /*
+        Closes the menu.
+        */
+        function closeMenu() {
+            menu.classList.remove("is-open");
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            menuButton.setAttribute(
+                "aria-label",
+                "Open navigation menu"
+            );
+        }
+
+        /*
+        Opens or closes the menu when the hamburger button
+        is clicked or tapped.
+        */
+        menuButton.addEventListener("click", toggleMenu);
+
+        /*
+        Closes the menu after a navigation link is selected.
+        */
+        menuLinks.forEach(function (link) {
+            link.addEventListener("click", closeMenu);
+        });
+
+        /*
+        Closes the menu when the user clicks somewhere else
+        on the page.
+        */
+        document.addEventListener("click", function (event) {
+            if (!menu.contains(event.target)) {
+                closeMenu();
+            }
+        });
+
+        /*
+        Closes the menu when the Escape key is pressed.
+        */
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                closeMenu();
+                menuButton.focus();
+            }
+        });
+
+
+        /*
+        ============================================================
+        AUTOMATIC FOOTER YEAR
+        ============================================================
+
+        This inserts the current year into:
+
+        <span id="current-year"></span>
+        */
+
+        document.getElementById("current-year").textContent =
+            new Date().getFullYear();
+    </script>
+
+</body>
+
+</html>
