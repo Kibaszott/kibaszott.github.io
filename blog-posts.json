@@ -1,8 +1,33 @@
 [
     {
-        "title": "My First Blog Post",
-        "date": "1 August 2026",
-        "file": "posts/first-post.html",
-        "summary": "A short introduction to my first blog post."
+        <h3>Website Creation</h3>
+
+
+
+                    <p class="post-date">
+
+                        01/08/2026
+
+                    </p>
+
+
+
+                    <p>
+
+                        Website is organised but it is not ideal. I like the structure however more design considerations must be made to improve the overall look.
+
+                       Additionally, the blog format does not function well within the coding. Two main issues arise. Firstly, the
+
+                        coding means that the blog posts are directly typed into the coding section. This results in truncated code which is not very
+
+                        elegant and may become difficult to manage after time. Secondly, the page is not yet formated to have a text allignment
+
+                        width. This runs the risk of the text becoming a wall of text, rather than a considerate, easy-to-read formatted blog post.
+
+                        Changes made to this page will likely be reflected in the writings page too as both will have multiple links, pages and
+
+                        variation in updates dates, separatre from the main website shell. 
+
+                    </p>
     }
 ]
