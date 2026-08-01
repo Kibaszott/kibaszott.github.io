@@ -519,6 +519,68 @@
 
         /*
         ============================================================
+        INTERNAL PAGE LAYOUT
+        ============================================================
+
+        These styles are used for About, Blog, Writings and
+        Miscellaneous.
+        */
+
+        .page-section {
+            min-height: calc(100vh - var(--banner-height));
+            padding: 70px 30px;
+
+            display: flex;
+            justify-content: center;
+        }
+
+        .page-content {
+            width: 100%;
+            max-width: 760px;
+        }
+
+        .page-content h2 {
+            margin-top: 0;
+            margin-bottom: 30px;
+
+            font-size: 34px;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .page-content h3 {
+            margin-top: 35px;
+            margin-bottom: 12px;
+
+            font-size: 23px;
+            font-weight: normal;
+        }
+
+        .page-content p,
+        .page-content li {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        .page-content p {
+            margin-top: 0;
+            margin-bottom: 22px;
+        }
+
+        .page-content a {
+            color: black;
+            text-underline-offset: 4px;
+        }
+
+        .post-date {
+            font-size: 15px;
+            font-style: italic;
+        }
+
+
+        /*
+        ============================================================
         FOOTER
         ============================================================
         */
@@ -598,6 +660,24 @@
 
             .introductory-text p {
                 font-size: 16px;
+            }
+
+            .page-section {
+                min-height: calc(100vh - var(--mobile-banner-height));
+                padding: 45px 20px;
+            }
+
+            .page-content h2 {
+                font-size: 28px;
+            }
+
+            .page-content h3 {
+                font-size: 21px;
+            }
+
+            .page-content p,
+            .page-content li {
+                font-size: 17px;
             }
         }
 
@@ -773,9 +853,7 @@
     MAIN HOMEPAGE CONTENT
     ============================================================
     -->
-
     <main id="page-content">
-
         <section class="hero">
 
             <div class="hero-content">
@@ -865,8 +943,192 @@
             </div>
 
         </section>
-
     </main>
+
+    <!--
+    ============================================================
+    INTERNAL PAGE TEMPLATES
+    ============================================================
+
+    These templates do not display by themselves.
+
+    JavaScript copies the selected template into the main page
+    area when a menu item is selected.
+    -->
+
+    <template id="page-home">
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <!--
+                ====================================================
+                MAIN IMAGE
+                ====================================================
+
+                This currently expects an image at:
+
+                images/main-image.jpg
+
+                Later, your GitHub repository should contain:
+
+                index.html
+                images/
+                    main-image.jpg
+
+                To use a different filename, change:
+
+                src="images/main-image.jpg"
+
+                Example:
+
+                src="images/home-photo.png"
+
+                The alt text describes the image for accessibility.
+                Replace it with a brief and accurate description.
+                -->
+
+                <img
+                    class="main-image"
+                    src="images/main-image.jpg"
+                    alt="Main image for Mathew's personal website"
+                >
+
+
+                <!--
+                ====================================================
+                TEXT UNDERNEATH THE IMAGE
+                ====================================================
+
+                Change the heading and paragraph below.
+
+                Usually, only replace the words between the
+                opening and closing tags.
+                -->
+
+                <div class="introductory-text">
+
+                    <!-- Change this homepage heading -->
+                    <h3>Welcome</h3>
+
+                    <!-- Change this introductory paragraph -->
+                    <p>
+                    All I seek is freedom.
+                    </p>
+
+                    <!--
+                    This optional link leads to the About page.
+
+                    Delete the complete <p> section below if you do
+                    not want this link.
+                    -->
+                    <p>
+                        <a
+                            class="text-link"
+                            href="#about"
+                            data-page="about"
+                            data-title="About Me"
+                        >
+                            about me
+                        </a>
+                    </p>
+
+                    <!--
+                    To add another paragraph, copy this:
+
+                    <p>
+                        Write another paragraph here.
+                    </p>
+                    -->
+
+                </div>
+
+            </div>
+
+        </section>
+    </template>
+
+    <template id="page-about">
+        <section class="page-section">
+            <article class="page-content">
+                <h2>About Me</h2>
+
+                <p>
+                    Write your About Me text here.
+                </p>
+
+                <p>
+                    You can add more paragraphs by copying this
+                    complete paragraph block.
+                </p>
+            </article>
+        </section>
+    </template>
+
+    <template id="page-blog">
+        <section class="page-section">
+            <div class="page-content">
+                <h2>Blog</h2>
+
+                <article class="post-preview">
+                    <h3>First Blog Post</h3>
+
+                    <p class="post-date">
+                        Add the date here
+                    </p>
+
+                    <p>
+                        Add a short introduction or blog entry here.
+                    </p>
+                </article>
+            </div>
+        </section>
+    </template>
+
+    <template id="page-writings">
+        <section class="page-section">
+            <div class="page-content">
+                <h2>Writings</h2>
+
+                <h3>Short Stories</h3>
+                <ul>
+                    <li>First short story</li>
+                </ul>
+
+                <h3>Essays</h3>
+                <ul>
+                    <li>First essay</li>
+                </ul>
+
+                <h3>Fragments and Unfinished Work</h3>
+                <ul>
+                    <li>First fragment</li>
+                </ul>
+            </div>
+        </section>
+    </template>
+
+    <template id="page-miscellaneous">
+        <section class="page-section">
+            <div class="page-content">
+                <h2>Miscellaneous</h2>
+
+                <p>
+                    This page is for anything that does not fit
+                    elsewhere.
+                </p>
+
+                <ul>
+                    <li>Playlists</li>
+                    <li>Photographs</li>
+                    <li>Film and book lists</li>
+                    <li>Links</li>
+                    <li>Notes and unfinished ideas</li>
+                </ul>
+            </div>
+        </section>
+    </template>
+
 
 
     <!--
@@ -916,6 +1178,12 @@
         const menuLinks = document.querySelectorAll("#dropdown-menu a");
 
         /*
+        Elements used by the internal page system.
+        */
+        const pageContent = document.getElementById("page-content");
+        const siteTitle = document.getElementById("site-title-text");
+
+        /*
         Opens or closes the menu.
         */
         function toggleMenu() {
@@ -961,7 +1229,19 @@
         Closes the menu after a navigation link is selected.
         */
         menuLinks.forEach(function (link) {
-            link.addEventListener("click", closeMenu);
+            link.addEventListener("click", function () {
+                closeMenu();
+
+                /*
+                If the user selects the page they are already viewing,
+                showPage runs directly because the hash will not change.
+                */
+                const pageName = link.dataset.page;
+
+                if (window.location.hash === "#" + pageName) {
+                    showPage(pageName);
+                }
+            });
         });
 
         /*
@@ -983,6 +1263,108 @@
                 menuButton.focus();
             }
         });
+
+
+        /*
+        ============================================================
+        INTERNAL PAGE SYSTEM
+        ============================================================
+
+        This changes only the main content and banner title.
+        The fixed banner and hamburger menu remain in place.
+        */
+
+        const pageTitles = {
+            home: "Mathew's Website",
+            about: "About Me",
+            blog: "Blog",
+            writings: "Writings",
+            miscellaneous: "Miscellaneous"
+        };
+
+        /*
+        Returns a valid page name from the browser address.
+
+        Example:
+        #blog becomes "blog".
+        */
+        function getPageFromHash() {
+            const pageName = window.location.hash.replace("#", "");
+
+            return pageTitles[pageName]
+                ? pageName
+                : "home";
+        }
+
+        /*
+        Displays one internal page.
+        */
+        function showPage(pageName) {
+            const safePageName = pageTitles[pageName]
+                ? pageName
+                : "home";
+
+            const template = document.getElementById(
+                "page-" + safePageName
+            );
+
+            if (!template) {
+                return;
+            }
+
+            /*
+            Replace only the contents of the main area.
+            */
+            pageContent.replaceChildren(
+                template.content.cloneNode(true)
+            );
+
+            /*
+            Change the fixed banner title.
+            */
+            siteTitle.textContent = pageTitles[safePageName];
+
+            /*
+            Change the browser-tab title.
+            */
+            document.title =
+                safePageName === "home"
+                    ? "Mathew's Personal Website"
+                    : pageTitles[safePageName] +
+                      " | Mathew's Website";
+
+            /*
+            Return to the top of the new content.
+            */
+            window.scrollTo({
+                top: 0,
+                behavior: "auto"
+            });
+
+            closeMenu();
+        }
+
+        /*
+        Display a new page when the browser hash changes.
+        This also makes the Back and Forward buttons work.
+        */
+        window.addEventListener("hashchange", function () {
+            showPage(getPageFromHash());
+        });
+
+        /*
+        The banner title links back to Home.
+        */
+        siteTitle.addEventListener("click", function () {
+            if (window.location.hash === "#home") {
+                showPage("home");
+            }
+        });
+
+        /*
+        Display the correct page when the website first opens.
+        */
+        showPage(getPageFromHash());
 
 
         /*
