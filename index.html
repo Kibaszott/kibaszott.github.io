@@ -597,6 +597,52 @@
 
         /*
         ============================================================
+        BLOG LIST AND BLOG POSTS
+        ============================================================
+        */
+
+        .blog-list-item {
+            padding: 0 0 30px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--subtle-border-colour);
+        }
+
+        .blog-list-item:last-child {
+            border-bottom: 0;
+        }
+
+        .blog-list-item h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .blog-list-item a {
+            color: var(--text-colour);
+            text-decoration-thickness: 1px;
+            text-underline-offset: 4px;
+        }
+
+        .blog-list-item a:hover {
+            text-decoration-thickness: 2px;
+        }
+
+        .blog-post-navigation {
+            margin-bottom: 28px;
+        }
+
+        .blog-post-navigation a {
+            color: var(--text-colour);
+            text-underline-offset: 4px;
+        }
+
+        .loading-message,
+        .error-message {
+            font-size: 17px;
+        }
+
+
+        /*
+        ============================================================
         FOOTER
         ============================================================
         */
@@ -1077,7 +1123,7 @@
                 </p>
 
                 <p>
-                    Come along with me as I learn about myself.<br>
+                    Come with me as I learna bout myself.<br>
                     
                 </p>
             </article>
@@ -1089,23 +1135,13 @@
             <div class="page-content">
                 <h2>Blog</h2>
 
-                <article class="post-preview">
-                    <h3>Website Creation</h3>
-
-                    <p class="post-date">
-                        01/08/2026
-                    </p>
-
-                    <p>
-                        Website is organised but it is not ideal. I like the structure however more design considerations must be made to improve the overall look.
-                       Additionally, the blog format does not function well within the coding. Two main issues arise. Firstly, the
-                        coding means that the blog posts are directly typed into the coding section. This results in truncated code which is not very
-                        elegant and may become difficult to manage after time. Secondly, the page is not yet formated to have a text allignment
-                        width. This runs the risk of the text becoming a wall of text, rather than a considerate, easy-to-read formatted blog post.
-                        Changes made to this page will likely be reflected in the writings page too as both will have multiple links, pages and
-                        variation in updates dates, separatre from the main website shell. 
-                    </p>
-                </article>
+                <!--
+                JavaScript fills this area using blog-posts.json.
+                You do not type individual posts into index.html.
+                -->
+                <div id="blog-list">
+                    <p>Loading blog posts...</p>
+                </div>
             </div>
         </section>
     </template>
@@ -1117,9 +1153,18 @@
 
                 <h3>Short Stories</h3>
                 <ul>
-                    <li>TBC</li>
+                    <li>First short story</li>
                 </ul>
 
+                <h3>Essays</h3>
+                <ul>
+                    <li>First essay</li>
+                </ul>
+
+                <h3>Fragments and Unfinished Work</h3>
+                <ul>
+                    <li>First fragment</li>
+                </ul>
             </div>
         </section>
     </template>
@@ -1127,13 +1172,20 @@
     <template id="page-miscellaneous">
         <section class="page-section">
             <div class="page-content">
-                <h2>Misc.</h2>
+                <h2>Miscellaneous</h2>
 
                 <p>
-                    To be updated.
+                    This page is for anything that does not fit
+                    elsewhere.
                 </p>
 
-
+                <ul>
+                    <li>Playlists</li>
+                    <li>Photographs</li>
+                    <li>Film and book lists</li>
+                    <li>Links</li>
+                    <li>Notes and unfinished ideas</li>
+                </ul>
             </div>
         </section>
     </template>
@@ -1276,11 +1328,14 @@
 
         /*
         ============================================================
-        INTERNAL PAGE SYSTEM
+        INTERNAL PAGE AND BLOG SYSTEM
         ============================================================
 
         This changes only the main content and banner title.
         The fixed banner and hamburger menu remain in place.
+
+        Blog information comes from blog-posts.json.
+        Individual articles come from files inside the posts folder.
         */
 
         const pageTitles = {
@@ -1292,23 +1347,155 @@
         };
 
         /*
-        Returns a valid page name from the browser address.
-
-        Example:
-        #blog becomes "blog".
+        Stores the blog index after it has been loaded.
         */
-        function getPageFromHash() {
-            const pageName = window.location.hash.replace("#", "");
+        let blogPosts = [];
 
-            return pageTitles[pageName]
-                ? pageName
-                : "home";
+        /*
+        Reads blog-posts.json.
+
+        The JSON file controls the order, title, date, summary
+        and file location of every blog post.
+        */
+        async function getBlogPosts() {
+            if (blogPosts.length > 0) {
+                return blogPosts;
+            }
+
+            const response = await fetch("blog-posts.json");
+
+            if (!response.ok) {
+                throw new Error("The blog index could not be loaded.");
+            }
+
+            blogPosts = await response.json();
+            return blogPosts;
         }
 
         /*
-        Displays one internal page.
+        Converts posts/first-post.html into first-post.
+        This is used in the browser address.
         */
-        function showPage(pageName) {
+        function getPostSlug(fileName) {
+            return fileName
+                .replace(/^posts\//, "")
+                .replace(/\.html$/, "");
+        }
+
+        /*
+        Returns information about the current browser address.
+
+        Examples:
+
+        #about
+        becomes:
+        { type: "page", page: "about" }
+
+        #blog/first-post
+        becomes:
+        { type: "post", slug: "first-post" }
+        */
+        function getRouteFromHash() {
+            const hash = window.location.hash.replace(/^#/, "");
+
+            if (hash.startsWith("blog/")) {
+                return {
+                    type: "post",
+                    slug: hash.slice("blog/".length)
+                };
+            }
+
+            if (pageTitles[hash]) {
+                return {
+                    type: "page",
+                    page: hash
+                };
+            }
+
+            return {
+                type: "page",
+                page: "home"
+            };
+        }
+
+        /*
+        Updates the fixed banner and browser-tab title.
+        */
+        function updateTitles(pageName, postTitle = "") {
+            if (postTitle) {
+                siteTitle.textContent = "Blog";
+                document.title =
+                    postTitle + " | Mathew's Website";
+                return;
+            }
+
+            siteTitle.textContent = pageTitles[pageName];
+
+            document.title =
+                pageName === "home"
+                    ? "Mathew's Personal Website"
+                    : pageTitles[pageName] +
+                      " | Mathew's Website";
+        }
+
+        /*
+        Displays the list of blog posts from blog-posts.json.
+        */
+        async function loadBlogList() {
+            const blogList = document.getElementById("blog-list");
+
+            if (!blogList) {
+                return;
+            }
+
+            blogList.innerHTML =
+                '<p class="loading-message">Loading blog posts...</p>';
+
+            try {
+                const posts = await getBlogPosts();
+
+                if (posts.length === 0) {
+                    blogList.innerHTML =
+                        "<p>No blog posts have been published yet.</p>";
+                    return;
+                }
+
+                blogList.innerHTML = posts.map(function (post) {
+                    const slug = getPostSlug(post.file);
+
+                    return `
+                        <article class="blog-list-item">
+                            <h3>
+                                <a href="#blog/${slug}">
+                                    ${post.title}
+                                </a>
+                            </h3>
+
+                            <p class="post-date">
+                                ${post.date}
+                            </p>
+
+                            <p>
+                                ${post.summary}
+                            </p>
+                        </article>
+                    `;
+                }).join("");
+            } catch (error) {
+                blogList.innerHTML = `
+                    <p class="error-message">
+                        The blog posts could not be loaded.
+                    </p>
+                `;
+
+                console.error(error);
+            }
+        }
+
+        /*
+        Displays one of the main internal pages.
+        */
+        async function showPage(pageName) {
             const safePageName = pageTitles[pageName]
                 ? pageName
                 : "home";
@@ -1321,51 +1508,126 @@
                 return;
             }
 
-            /*
-            Replace only the contents of the main area.
-            */
             pageContent.replaceChildren(
                 template.content.cloneNode(true)
             );
 
-            /*
-            Change the fixed banner title.
-            */
-            siteTitle.textContent = pageTitles[safePageName];
+            updateTitles(safePageName);
 
-            /*
-            Change the browser-tab title.
-            */
-            document.title =
-                safePageName === "home"
-                    ? "Mathew's Personal Website"
-                    : pageTitles[safePageName] +
-                      " | Mathew's Website";
-
-            /*
-            Return to the top of the new content.
-            */
             window.scrollTo({
                 top: 0,
                 behavior: "auto"
             });
 
             closeMenu();
+
+            if (safePageName === "blog") {
+                await loadBlogList();
+            }
         }
 
         /*
-        Display a new page when the browser hash changes.
-        This also makes the Back and Forward buttons work.
+        Loads one separate blog article into the main content area.
         */
-        window.addEventListener("hashchange", function () {
-            showPage(getPageFromHash());
-        });
+        async function showBlogPost(slug) {
+            try {
+                const posts = await getBlogPosts();
+
+                const post = posts.find(function (item) {
+                    return getPostSlug(item.file) === slug;
+                });
+
+                if (!post) {
+                    throw new Error("The requested blog post was not found.");
+                }
+
+                pageContent.innerHTML = `
+                    <section class="page-section">
+                        <div class="page-content">
+                            <nav class="blog-post-navigation">
+                                <a href="#blog">
+                                    &larr; Back to Blog
+                                </a>
+                            </nav>
+
+                            <div id="loaded-blog-post">
+                                <p class="loading-message">
+                                    Loading blog post...
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                `;
+
+                updateTitles("blog", post.title);
+
+                const response = await fetch(post.file);
+
+                if (!response.ok) {
+                    throw new Error("The blog article could not be loaded.");
+                }
+
+                const articleHtml = await response.text();
+
+                document.getElementById(
+                    "loaded-blog-post"
+                ).innerHTML = articleHtml;
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "auto"
+                });
+
+                closeMenu();
+            } catch (error) {
+                pageContent.innerHTML = `
+                    <section class="page-section">
+                        <div class="page-content">
+                            <h2>Blog post unavailable</h2>
+
+                            <p>
+                                This blog post could not be loaded.
+                            </p>
+
+                            <p>
+                                <a href="#blog">
+                                    Return to the Blog
+                                </a>
+                            </p>
+                        </div>
+                    </section>
+                `;
+
+                updateTitles("blog");
+                console.error(error);
+            }
+        }
+
+        /*
+        Opens the correct internal page whenever the address changes.
+        This also makes the browser Back and Forward buttons work.
+        */
+        async function handleRoute() {
+            const route = getRouteFromHash();
+
+            if (route.type === "post") {
+                await showBlogPost(route.slug);
+                return;
+            }
+
+            await showPage(route.page);
+        }
+
+        window.addEventListener("hashchange", handleRoute);
 
         /*
         The banner title links back to Home.
         */
         siteTitle.addEventListener("click", function () {
-            if (window.location.hash === "#home") {
+            if (
+                window.location.hash === "#home" ||
+                window.location.hash === ""
+            ) {
                 showPage("home");
             }
         });
@@ -1373,7 +1635,7 @@
         /*
         Display the correct page when the website first opens.
         */
-        showPage(getPageFromHash());
+        handleRoute();
 
 
         /*
