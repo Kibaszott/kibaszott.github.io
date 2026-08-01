@@ -35,6 +35,12 @@
 
     <style>
         /*
+        Loads Roboto from Google Fonts for the website body, menu,
+        page content and footer. The top banner title keeps Arial.
+        */
+        @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+
+        /*
         ============================================================
         COLOUR SETTINGS
         ============================================================
@@ -111,7 +117,7 @@
             Georgia, "Times New Roman", serif;
             Verdana, Arial, sans-serif;
             */
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: "Roboto", Arial, Helvetica, sans-serif;
 
             /*
             Makes normal text easier to read.
@@ -175,6 +181,11 @@
 
         .site-title {
             margin: 0;
+
+            /*
+            Keeps the top banner title in its original font.
+            */
+            font-family: Arial, Helvetica, sans-serif;
 
             /*
             Change this number to make the banner title
@@ -359,6 +370,11 @@
 
         .dropdown a {
             display: block;
+
+            /*
+            Dropdown menu text uses Roboto.
+            */
+            font-family: "Roboto", Arial, Helvetica, sans-serif;
 
             /*
             First number = top and bottom spacing.
@@ -558,7 +574,7 @@
 
         .page-content p,
         .page-content li {
-            font-family: Georgia, "Times New Roman", serif;
+            font-family: "Roboto", Arial, Helvetica, sans-serif;
             font-size: 18px;
             line-height: 1.8;
         }
