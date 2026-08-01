@@ -1,4 +1,8 @@
-        "title": "Website Creation",
+      [
+              {
+                      "title": "Website Creation",
         "date": "1 August 2026",
         "file": "posts/first-post.html",
         "summary": "A short introduction to the website set up."
+              }
+      ]
