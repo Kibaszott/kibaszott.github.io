@@ -592,7 +592,7 @@
                 padding: 40px 20px;
             }
 
-            .introductory-text h2 {
+            .introductory-text h3 {
                 font-size: 25px;
             }
 
@@ -670,45 +670,80 @@
             WEBSITE MENU LINKS
             ========================================================
 
-            These links expect the following future files:
+            These links now point to internal sections of index.html.
 
-            about.html
-            blog.html
-            writings.html
-            miscellaneous.html
+            The visible words can still be changed between
+            the opening and closing <a> tags.
 
-            We can create those files afterwards.
-
-            To rename a visible menu item, change the words
-            between > and </a>.
-
-            Example:
-
-            <a href="about.html">About Me</a>
+            The data-page value identifies the content section.
+            The data-title value controls the top-banner heading.
             -->
 
             <ul
                 class="dropdown"
                 id="dropdown-menu"
             >
+                <!--
+                Each link now points to an internal website section.
+
+                href="#home"
+                Changes the address in the browser.
+
+                data-page="home"
+                Tells JavaScript which content to display later.
+
+                data-title="Mathew's Website"
+                Tells JavaScript what text to show in the top banner.
+                -->
+
                 <li>
-                    <a href="index.html">Home</a>
+                    <a
+                        href="#home"
+                        data-page="home"
+                        data-title="Mathew's Website"
+                    >
+                        Home
+                    </a>
                 </li>
 
                 <li>
-                    <a href="about.html">About Me</a>
+                    <a
+                        href="#about"
+                        data-page="about"
+                        data-title="About Me"
+                    >
+                        About Me
+                    </a>
                 </li>
 
                 <li>
-                    <a href="blog.html">Blog</a>
+                    <a
+                        href="#blog"
+                        data-page="blog"
+                        data-title="Blog"
+                    >
+                        Blog
+                    </a>
                 </li>
 
                 <li>
-                    <a href="writings.html">Writings</a>
+                    <a
+                        href="#writings"
+                        data-page="writings"
+                        data-title="Writings"
+                    >
+                        Writings
+                    </a>
                 </li>
 
                 <li>
-                    <a href="miscellaneous.html">Miscellaneous</a>
+                    <a
+                        href="#miscellaneous"
+                        data-page="miscellaneous"
+                        data-title="Miscellaneous"
+                    >
+                        Miscellaneous
+                    </a>
                 </li>
             </ul>
 
@@ -722,7 +757,12 @@
         The title is also a link back to the homepage.
         -->
         <h1 class="site-title">
-            <a href="index.html">Mathew's Website</a>
+            <a
+                href="#home"
+                id="site-title-text"
+            >
+                Mathew's Website
+            </a>
         </h1>
 
     </header>
@@ -734,7 +774,7 @@
     ============================================================
     -->
 
-    <main>
+    <main id="page-content">
 
         <section class="hero">
 
@@ -804,7 +844,9 @@
                     <p>
                         <a
                             class="text-link"
-                            href="about.html"
+                            href="#about"
+                            data-page="about"
+                            data-title="About Me"
                         >
                             about me
                         </a>
