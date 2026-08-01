@@ -74,6 +74,18 @@
             or shorter on phones.
             */
             --mobile-banner-height: 65px;
+
+            /*
+            Decorative motif image used beneath the banner
+            and behind the footer.
+
+            Upload the chosen image later as:
+            images/motif-image.jpg
+            */
+            --motif-image: url("images/motif-image.jpg");
+            --motif-strip-height: 10px;
+            --mobile-motif-strip-height: 8px;
+            --footer-motif-height: 100px;
         }
 
 
@@ -177,6 +189,24 @@
             z-index: 1000;
 
             border-bottom: 1px solid var(--banner-text-colour);
+        }
+
+        /*
+        Thin decorative strip fixed beneath the black banner.
+        */
+        .motif-strip {
+            position: fixed;
+            top: var(--banner-height);
+            left: 0;
+
+            width: 100%;
+            height: var(--motif-strip-height);
+
+            background-image: var(--motif-image);
+            background-size: cover;
+            background-position: center;
+
+            z-index: 999;
         }
 
         .site-title {
@@ -419,7 +449,10 @@
             /*
             Stops the fixed banner covering the top of the page.
             */
-            padding-top: var(--banner-height);
+            padding-top: calc(
+                var(--banner-height)
+                + var(--motif-strip-height)
+            );
         }
 
         .hero {
@@ -427,7 +460,11 @@
             Gives the main section at least enough height to
             fill the screen beneath the fixed banner.
             */
-            min-height: calc(100vh - var(--banner-height));
+            min-height: calc(
+                100vh
+                - var(--banner-height)
+                - var(--motif-strip-height)
+            );
 
             /*
             Controls the spacing around the homepage content.
@@ -543,7 +580,11 @@
         */
 
         .page-section {
-            min-height: calc(100vh - var(--banner-height));
+            min-height: calc(
+                100vh
+                - var(--banner-height)
+                - var(--motif-strip-height)
+            );
             padding: 70px 30px;
 
             display: flex;
@@ -647,18 +688,40 @@
         ============================================================
         */
 
+        /*
+        Footer with a faded version of the motif image.
+
+        Lower 0.62 to show more image.
+        Raise 0.62 to make the image fainter.
+        */
         .site-footer {
-            padding: 25px 20px;
+            min-height: var(--footer-motif-height);
+            padding: 30px 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
             text-align: center;
+            font-size: 14px;
+
+            background-image:
+                linear-gradient(
+                    rgba(255, 255, 255, 0.62),
+                    rgba(255, 255, 255, 0.62)
+                ),
+                var(--motif-image);
+
+            background-size: cover;
+            background-position: center;
 
             border-top: 1px solid var(--subtle-border-colour);
-
-            font-size: 14px;
         }
 
         .site-footer p {
             margin: 0;
+            padding: 5px 10px;
+            background-color: rgba(255, 255, 255, 0.30);
         }
 
 
@@ -706,12 +769,24 @@
                 padding-right: 20px;
             }
 
+            .motif-strip {
+                top: var(--mobile-banner-height);
+                height: var(--mobile-motif-strip-height);
+            }
+
             main {
-                padding-top: var(--mobile-banner-height);
+                padding-top: calc(
+                    var(--mobile-banner-height)
+                    + var(--mobile-motif-strip-height)
+                );
             }
 
             .hero {
-                min-height: calc(100vh - var(--mobile-banner-height));
+                min-height: calc(
+                    100vh
+                    - var(--mobile-banner-height)
+                    - var(--mobile-motif-strip-height)
+                );
 
                 padding: 40px 20px;
             }
@@ -725,7 +800,11 @@
             }
 
             .page-section {
-                min-height: calc(100vh - var(--mobile-banner-height));
+                min-height: calc(
+                    100vh
+                    - var(--mobile-banner-height)
+                    - var(--mobile-motif-strip-height)
+                );
                 padding: 45px 20px;
             }
 
@@ -740,6 +819,11 @@
             .page-content p,
             .page-content li {
                 font-size: 17px;
+            }
+
+            .site-footer {
+                min-height: 80px;
+                padding: 24px 15px;
             }
         }
 
@@ -912,6 +996,12 @@
         </h1>
 
     </header>
+
+    <!-- Thin decorative image strip beneath the fixed banner -->
+    <div
+        class="motif-strip"
+        aria-hidden="true"
+    ></div>
 
 
     <!--
