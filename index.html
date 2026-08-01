@@ -681,6 +681,44 @@
             font-size: 17px;
         }
 
+        /*
+        ============================================================
+        SCROLLABLE BLOG DIRECTORY
+        ============================================================
+
+        The Blog heading remains above this box.
+
+        When the directory becomes taller than 430px,
+        a vertical scrollbar appears automatically.
+        */
+        .blog-link-box {
+            width: 100%;
+            max-height: 430px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 22px;
+            border: 1px solid #bcbcbc;
+            background-color: #ffffff;
+            scrollbar-width: thin;
+            scrollbar-color: #666666 #eeeeee;
+        }
+
+        .blog-link-box::-webkit-scrollbar {
+            width: 9px;
+        }
+
+        .blog-link-box::-webkit-scrollbar-track {
+            background: #eeeeee;
+        }
+
+        .blog-link-box::-webkit-scrollbar-thumb {
+            background: #666666;
+        }
+
+        .blog-link-box::-webkit-scrollbar-thumb:hover {
+            background: #333333;
+        }
+
 
         /*
         ============================================================
@@ -819,6 +857,11 @@
             .page-content p,
             .page-content li {
                 font-size: 17px;
+            }
+
+            .blog-link-box {
+                max-height: 360px;
+                padding: 18px;
             }
 
             .site-footer {
@@ -1227,15 +1270,23 @@
     <template id="page-blog">
         <section class="page-section">
             <div class="page-content">
+
+                <!-- The Blog heading remains outside the scrollable box -->
                 <h2>Blog</h2>
 
                 <!--
-                JavaScript fills this area using blog-posts.json.
-                You do not type individual posts into index.html.
+                JavaScript fills this box using blog-posts.json.
+
+                The box becomes vertically scrollable when the list
+                of blog posts grows beyond its maximum height.
                 -->
-                <div id="blog-list">
+                <div
+                    id="blog-list"
+                    class="blog-link-box"
+                >
                     <p>Loading blog posts...</p>
                 </div>
+
             </div>
         </section>
     </template>
@@ -1544,6 +1595,16 @@
             try {
                 const posts = await getBlogPosts();
 
+                /*
+                Sorts blog posts newest-first.
+
+                Every entry in blog-posts.json should contain:
+                "dateISO": "YYYY-MM-DD"
+                */
+                posts.sort(function (a, b) {
+                    return new Date(b.dateISO) - new Date(a.dateISO);
+                });
+
                 if (posts.length === 0) {
                     blogList.innerHTML =
                         "<p>No blog posts have been published yet.</p>";
@@ -1560,10 +1621,6 @@
                                     ${post.title}
                                 </a>
                             </h3>
-
-                            <p class="post-date">
-                                ${post.date}
-                            </p>
 
                             <p>
                                 ${post.summary}
