@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Photos | Mathew's Website</title>
+
+    <meta
+        name="description"
+        content="A photographic gallery on Mathew's personal website."
+    >
+
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+
+        :root {
+            --background-colour: #ffffff;
+            --text-colour: #000000;
+            --banner-colour: #000000;
+            --banner-text-colour: #ffffff;
+            --subtle-border-colour: #d6d6d6;
+            --banner-height: 80px;
+            --mobile-banner-height: 65px;
+
+            /*
+            This is the same motif image used by index.html.
+            */
+            --motif-image: url("images/motif-image.jpg");
+            --motif-strip-height: 10px;
+            --mobile-motif-strip-height: 8px;
+            --footer-motif-height: 100px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--background-colour);
+            color: var(--text-colour);
+            font-family: "Roboto", Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+        }
+
+        body.lightbox-open {
+            overflow: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 3px solid currentColor;
+            outline-offset: 3px;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        /*
+        ============================================================
+        FIXED BANNER
+        ============================================================
+        */
+
+        .top-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--banner-height);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background-color: var(--banner-colour);
+            color: var(--banner-text-colour);
+
+            border-bottom: 1px solid var(--banner-text-colour);
+            z-index: 1000;
+        }
+
+        .site-title {
+            margin: 0;
+            padding: 0 90px;
+            text-align: center;
+
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 24px;
+            font-weight: normal;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .back-link {
+            position: absolute;
+            left: 24px;
+
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .back-link:hover {
+            opacity: 0.7;
+        }
+
+        .motif-strip {
+            position: fixed;
+            top: var(--banner-height);
+            left: 0;
+            width: 100%;
+            height: var(--motif-strip-height);
+
+            background-image: var(--motif-image);
+            background-size: cover;
+            background-position: center;
+
+            z-index: 999;
+        }
+
+        /*
+        ============================================================
+        PAGE LAYOUT
+        ============================================================
+        */
+
+        main {
+            padding-top: calc(
+                var(--banner-height)
+                + var(--motif-strip-height)
+            );
+        }
+
+        .gallery-section {
+            min-height: calc(
+                100vh
+                - var(--banner-height)
+                - var(--motif-strip-height)
+            );
+
+            padding: 70px 30px;
+        }
+
+        .gallery-content {
+            width: 100%;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        .gallery-heading {
+            margin: 0 0 16px;
+            font-size: 34px;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .gallery-introduction {
+            max-width: 680px;
+            margin: 0 0 38px;
+            font-size: 18px;
+        }
+
+        /*
+        ============================================================
+        PHOTO GRID
+        ============================================================
+        */
+
+        .photo-grid {
+            display: grid;
+
+            /*
+            Creates as many columns as will comfortably fit.
+            Each tile remains at least 230px wide.
+            */
+            grid-template-columns:
+                repeat(auto-fill, minmax(230px, 1fr));
+
+            gap: 18px;
+        }
+
+        .photo-tile {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+
+            margin: 0;
+            padding: 0;
+
+            overflow: hidden;
+            border: 0;
+            background-color: #eeeeee;
+            cursor: zoom-in;
+        }
+
+        .photo-tile img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+
+            /*
+            Photographs begin in greyscale.
+            */
+            filter: grayscale(100%);
+
+            transition:
+                filter 0.45s ease,
+                transform 0.45s ease;
+        }
+
+        .photo-tile:hover img,
+        .photo-tile:focus-visible img {
+            filter: grayscale(0%);
+            transform: scale(1.025);
+        }
+
+        .photo-status,
+        .photo-error {
+            font-size: 17px;
+        }
+
+        /*
+        ============================================================
+        FULL-SCREEN LIGHTBOX
+        ============================================================
+        */
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+
+            display: none;
+            overflow-y: auto;
+
+            padding: 34px;
+
+            background-color: rgba(0, 0, 0, 0.94);
+            z-index: 2000;
+        }
+
+        .lightbox.is-open {
+            display: block;
+        }
+
+        .lightbox-inner {
+            width: 100%;
+            min-height: calc(100vh - 68px);
+
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+
+            padding-top: 34px;
+            padding-bottom: 34px;
+        }
+
+        .lightbox-image {
+            display: block;
+
+            /*
+            The image can be tall enough to require scrolling,
+            but never wider than the visible browser area.
+            */
+            width: auto;
+            max-width: min(1400px, calc(100vw - 68px));
+            height: auto;
+
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.55);
+        }
+
+        .lightbox-close {
+            position: fixed;
+            top: 17px;
+            right: 21px;
+
+            width: 46px;
+            height: 46px;
+
+            padding: 0;
+
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            border-radius: 50%;
+
+            background-color: rgba(0, 0, 0, 0.45);
+            color: white;
+
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 29px;
+            line-height: 1;
+
+            cursor: pointer;
+            z-index: 2001;
+        }
+
+        .lightbox-close:hover {
+            background-color: white;
+            color: black;
+        }
+
+        /*
+        ============================================================
+        FOOTER
+        ============================================================
+        */
+
+        .site-footer {
+            min-height: var(--footer-motif-height);
+            padding: 30px 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+            font-size: 14px;
+
+            background-image:
+                linear-gradient(
+                    rgba(255, 255, 255, 0.62),
+                    rgba(255, 255, 255, 0.62)
+                ),
+                var(--motif-image);
+
+            background-size: cover;
+            background-position: center;
+
+            border-top: 1px solid var(--subtle-border-colour);
+        }
+
+        .site-footer p {
+            margin: 0;
+            padding: 5px 10px;
+            background-color: rgba(255, 255, 255, 0.30);
+        }
+
+        /*
+        ============================================================
+        MOBILE
+        ============================================================
+        */
+
+        @media (max-width: 600px) {
+            .top-banner {
+                height: var(--mobile-banner-height);
+            }
+
+            .site-title {
+                padding-left: 95px;
+                padding-right: 20px;
+
+                font-size: 17px;
+                letter-spacing: 2px;
+            }
+
+            .back-link {
+                left: 16px;
+                font-size: 14px;
+            }
+
+            .motif-strip {
+                top: var(--mobile-banner-height);
+                height: var(--mobile-motif-strip-height);
+            }
+
+            main {
+                padding-top: calc(
+                    var(--mobile-banner-height)
+                    + var(--mobile-motif-strip-height)
+                );
+            }
+
+            .gallery-section {
+                min-height: calc(
+                    100vh
+                    - var(--mobile-banner-height)
+                    - var(--mobile-motif-strip-height)
+                );
+
+                padding: 45px 18px;
+            }
+
+            .gallery-heading {
+                font-size: 28px;
+            }
+
+            .gallery-introduction {
+                font-size: 17px;
+            }
+
+            .photo-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+
+                gap: 10px;
+            }
+
+            .lightbox {
+                padding: 16px;
+            }
+
+            .lightbox-inner {
+                min-height: calc(100vh - 32px);
+                padding-top: 48px;
+                padding-bottom: 28px;
+            }
+
+            .lightbox-image {
+                max-width: calc(100vw - 32px);
+            }
+
+            .lightbox-close {
+                top: 12px;
+                right: 12px;
+            }
+
+            .site-footer {
+                min-height: 80px;
+                padding: 24px 15px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="top-banner">
+        <a
+            class="back-link"
+            href="index.html#miscellaneous"
+        >
+            &larr; Misc.
+        </a>
+
+        <h1 class="site-title">
+            Photos
+        </h1>
+    </header>
+
+    <div
+        class="motif-strip"
+        aria-hidden="true"
+    ></div>
+
+    <main>
+        <section class="gallery-section">
+            <div class="gallery-content">
+                <h2 class="gallery-heading">Photos</h2>
+
+                <p class="gallery-introduction">
+                    A collection of photographs.
+                </p>
+
+                <div
+                    class="photo-grid"
+                    id="photo-grid"
+                >
+                    <p class="photo-status">
+                        Loading photographs...
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!--
+    The lightbox remains inside this page.
+    It does not open a new browser tab or window.
+    -->
+    <div
+        class="lightbox"
+        id="lightbox"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Enlarged photograph"
+        aria-hidden="true"
+    >
+        <button
+            class="lightbox-close"
+            id="lightbox-close"
+            type="button"
+            aria-label="Close enlarged photograph"
+        >
+            &times;
+        </button>
+
+        <div class="lightbox-inner">
+            <img
+                class="lightbox-image"
+                id="lightbox-image"
+                src=""
+                alt=""
+            >
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <p>
+            &copy;
+            <span id="current-year"></span>
+            Mathew
+        </p>
+    </footer>
+
+    <script>
+        const photoGrid =
+            document.getElementById("photo-grid");
+
+        const lightbox =
+            document.getElementById("lightbox");
+
+        const lightboxImage =
+            document.getElementById("lightbox-image");
+
+        const lightboxClose =
+            document.getElementById("lightbox-close");
+
+        let lastFocusedTile = null;
+
+        /*
+        Prevents text loaded from photos.json from being
+        interpreted as HTML.
+        */
+        function escapeHtml(value) {
+            return String(value)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        /*
+        Opens one photograph inside the page.
+        */
+        function openLightbox(photo, tile) {
+            lastFocusedTile = tile;
+
+            lightboxImage.src = photo.file;
+            lightboxImage.alt = photo.alt || "";
+
+            lightbox.classList.add("is-open");
+            lightbox.setAttribute("aria-hidden", "false");
+
+            document.body.classList.add("lightbox-open");
+
+            lightboxClose.focus();
+        }
+
+        /*
+        Closes the full-screen photograph.
+        */
+        function closeLightbox() {
+            lightbox.classList.remove("is-open");
+            lightbox.setAttribute("aria-hidden", "true");
+
+            lightboxImage.src = "";
+            lightboxImage.alt = "";
+
+            document.body.classList.remove("lightbox-open");
+
+            if (lastFocusedTile) {
+                lastFocusedTile.focus();
+            }
+        }
+
+        /*
+        Loads the photograph list from photos.json.
+        */
+        async function loadPhotos() {
+            try {
+                const response = await fetch("photos.json");
+
+                if (!response.ok) {
+                    throw new Error(
+                        "The photograph list could not be loaded."
+                    );
+                }
+
+                const photos = await response.json();
+
+                if (!Array.isArray(photos) || photos.length === 0) {
+                    photoGrid.innerHTML = `
+                        <p class="photo-status">
+                            No photographs have been added yet.
+                        </p>
+                    `;
+                    return;
+                }
+
+                photoGrid.innerHTML = photos
+                    .map(function (photo, index) {
+                        return `
+                            <button
+                                class="photo-tile"
+                                type="button"
+                                data-photo-index="${index}"
+                                aria-label="Enlarge ${escapeHtml(
+                                    photo.alt || "photograph"
+                                )}"
+                            >
+                                <img
+                                    src="${escapeHtml(photo.file)}"
+                                    alt="${escapeHtml(photo.alt || "")}"
+                                    loading="lazy"
+                                >
+                            </button>
+                        `;
+                    })
+                    .join("");
+
+                const photoTiles =
+                    document.querySelectorAll(".photo-tile");
+
+                photoTiles.forEach(function (tile) {
+                    tile.addEventListener("click", function () {
+                        const index =
+                            Number(tile.dataset.photoIndex);
+
+                        openLightbox(photos[index], tile);
+                    });
+                });
+            } catch (error) {
+                photoGrid.innerHTML = `
+                    <p class="photo-error">
+                        The photographs could not be loaded.
+                    </p>
+                `;
+
+                console.error(error);
+            }
+        }
+
+        lightboxClose.addEventListener(
+            "click",
+            closeLightbox
+        );
+
+        /*
+        Clicking the dark background closes the lightbox.
+        Clicking the photograph itself does not.
+        */
+        lightbox.addEventListener("click", function (event) {
+            if (
+                event.target === lightbox ||
+                event.target.classList.contains(
+                    "lightbox-inner"
+                )
+            ) {
+                closeLightbox();
+            }
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (
+                event.key === "Escape" &&
+                lightbox.classList.contains("is-open")
+            ) {
+                closeLightbox();
+            }
+        });
+
+        document.getElementById("current-year").textContent =
+            new Date().getFullYear();
+
+        loadPhotos();
+    </script>
+</body>
+
+</html>
