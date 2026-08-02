@@ -1,14 +1,22 @@
 [
     {
         "file": "photos/example-01.jpg",
-        "alt": "Description of the first photograph"
+        "alt": "Test Image 1, Roland Garros"
     },
     {
         "file": "photos/example-02.jpg",
-        "alt": "Description of the second photograph"
+        "alt": "Test Image 2, Gustav Klimt"
     },
     {
         "file": "photos/example-03.jpg",
-        "alt": "Description of the third photograph"
+        "alt": "Test Image 3, River Estuary"
+    },
+    {
+        "file": "photos/Lux-beach.jpg",
+        "alt": "Lux at the beach"
+    },
+    {
+        "file": "photos/rattail.jpg",
+        "alt": "Rat tail selfie"
     }
 ]
