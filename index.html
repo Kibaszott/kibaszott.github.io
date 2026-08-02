@@ -141,6 +141,13 @@
         Gives keyboard users a visible outline when they
         select buttons or links.
         */
+        /*
+        Removes underlines from every link across the entire website.
+        */
+        a {
+            text-decoration: none;
+        }
+
         a:focus-visible,
         button:focus-visible {
             outline: 3px solid currentColor;
@@ -561,12 +568,6 @@
         */
         .text-link {
             color: var(--text-colour);
-            text-decoration-thickness: 1px;
-            text-underline-offset: 4px;
-        }
-
-        .text-link:hover {
-            text-decoration-thickness: 2px;
         }
 
 
@@ -627,7 +628,6 @@
 
         .page-content a {
             color: black;
-            text-underline-offset: 4px;
         }
 
         .post-date {
@@ -659,12 +659,6 @@
 
         .blog-list-item a {
             color: var(--text-colour);
-            text-decoration-thickness: 1px;
-            text-underline-offset: 4px;
-        }
-
-        .blog-list-item a:hover {
-            text-decoration-thickness: 2px;
         }
 
         .blog-post-navigation {
@@ -673,7 +667,6 @@
 
         .blog-post-navigation a {
             color: var(--text-colour);
-            text-underline-offset: 4px;
         }
 
         .loading-message,
