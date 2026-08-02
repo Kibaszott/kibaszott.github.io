@@ -729,6 +729,64 @@
             display: none;
         }
 
+        /*
+        ============================================================
+        CUSTOM SCROLL ARROWS
+        ============================================================
+
+        These replace the visible scrollbar with a small dark-grey
+        up arrow and down arrow.
+        */
+        .scroll-area-wrapper {
+            position: relative;
+        }
+
+        .scroll-arrow {
+            position: absolute;
+            right: -34px;
+
+            width: 28px;
+            height: 28px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 0;
+
+            border: 0;
+            background: transparent;
+            color: #2f2f2f;
+
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 22px;
+            line-height: 1;
+
+            cursor: pointer;
+            z-index: 2;
+
+            opacity: 0.9;
+            transition: opacity 0.2s ease;
+        }
+
+        .scroll-arrow:hover,
+        .scroll-arrow:focus-visible {
+            opacity: 1;
+        }
+
+        .scroll-arrow-up {
+            top: 0;
+        }
+
+        .scroll-arrow-down {
+            bottom: 0;
+        }
+
+        .scroll-arrow:disabled {
+            opacity: 0.18;
+            cursor: default;
+        }
+
 
 
         /*
@@ -965,6 +1023,15 @@
 
                 min-height: 150px;
                 padding-right: 4px;
+            }
+
+            .scroll-arrow {
+                right: -2px;
+                width: 30px;
+                height: 30px;
+
+                background-color: rgba(255, 255, 255, 0.78);
+                border-radius: 50%;
             }
 
             .site-footer {
@@ -1374,20 +1441,37 @@
         <section class="page-section">
             <div class="page-content">
 
-                <!-- The Blog heading remains outside the scrollable box -->
                 <h2>Blog</h2>
 
-                <!--
-                JavaScript fills this box using blog-posts.json.
+                <div class="scroll-area-wrapper">
 
-                The box becomes vertically scrollable when the list
-                of blog posts grows beyond its maximum height.
-                -->
-                <div
-                    id="blog-list"
-                    class="blog-link-box"
-                >
-                    <p>Loading blog posts...</p>
+                    <button
+                        class="scroll-arrow scroll-arrow-up"
+                        type="button"
+                        aria-label="Scroll Blog upward"
+                        data-scroll-target="blog-list"
+                        data-scroll-direction="up"
+                    >
+                        &#9650;
+                    </button>
+
+                    <div
+                        id="blog-list"
+                        class="blog-link-box"
+                    >
+                        <p>Loading blog posts...</p>
+                    </div>
+
+                    <button
+                        class="scroll-arrow scroll-arrow-down"
+                        type="button"
+                        aria-label="Scroll Blog downward"
+                        data-scroll-target="blog-list"
+                        data-scroll-direction="down"
+                    >
+                        &#9660;
+                    </button>
+
                 </div>
 
             </div>
@@ -1446,18 +1530,45 @@
             <div class="page-content">
                 <h2>Site Log</h2>
 
-                <div class="site-log-scroll-box">
+                <div class="scroll-area-wrapper">
 
-                    <p>
-                        A record of design, layout and functionality changes
-                        made to this website.
-                    </p>
+                    <button
+                        class="scroll-arrow scroll-arrow-up"
+                        type="button"
+                        aria-label="Scroll Site Log upward"
+                        data-scroll-target="site-log-scroll-box"
+                        data-scroll-direction="up"
+                    >
+                        &#9650;
+                    </button>
 
-                    <div id="site-log-list">
-                        <p class="loading-message">
-                            Loading website updates...
+                    <div
+                        class="site-log-scroll-box"
+                        id="site-log-scroll-box"
+                    >
+
+                        <p>
+                            A record of design, layout and functionality changes
+                            made to this website.
                         </p>
+
+                        <div id="site-log-list">
+                            <p class="loading-message">
+                                Loading website updates...
+                            </p>
+                        </div>
+
                     </div>
+
+                    <button
+                        class="scroll-arrow scroll-arrow-down"
+                        type="button"
+                        aria-label="Scroll Site Log downward"
+                        data-scroll-target="site-log-scroll-box"
+                        data-scroll-direction="down"
+                    >
+                        &#9660;
+                    </button>
 
                 </div>
 
@@ -1939,6 +2050,77 @@
 
 
         /*
+        ============================================================
+        CUSTOM SCROLL ARROW CONTROLS
+        ============================================================
+        */
+
+        function updateScrollArrowStates(scrollArea) {
+            const wrapper = scrollArea.closest(".scroll-area-wrapper");
+
+            if (!wrapper) {
+                return;
+            }
+
+            const upButton = wrapper.querySelector(
+                '[data-scroll-direction="up"]'
+            );
+
+            const downButton = wrapper.querySelector(
+                '[data-scroll-direction="down"]'
+            );
+
+            const tolerance = 2;
+
+            if (upButton) {
+                upButton.disabled =
+                    scrollArea.scrollTop <= tolerance;
+            }
+
+            if (downButton) {
+                downButton.disabled =
+                    scrollArea.scrollTop +
+                    scrollArea.clientHeight >=
+                    scrollArea.scrollHeight - tolerance;
+            }
+        }
+
+        function initialiseScrollArrows() {
+            const arrowButtons =
+                document.querySelectorAll(".scroll-arrow");
+
+            arrowButtons.forEach(function (button) {
+                const targetId = button.dataset.scrollTarget;
+                const direction = button.dataset.scrollDirection;
+                const scrollArea =
+                    document.getElementById(targetId);
+
+                if (!scrollArea) {
+                    return;
+                }
+
+                button.addEventListener("click", function () {
+                    const amount =
+                        Math.max(180, scrollArea.clientHeight * 0.7);
+
+                    scrollArea.scrollBy({
+                        top: direction === "up"
+                            ? -amount
+                            : amount,
+                        behavior: "smooth"
+                    });
+                });
+
+                scrollArea.addEventListener("scroll", function () {
+                    updateScrollArrowStates(scrollArea);
+                });
+
+                updateScrollArrowStates(scrollArea);
+            });
+        }
+
+
+        /*
         Displays one of the main internal pages.
         */
         async function showPage(pageName) {
@@ -1974,6 +2156,20 @@
             if (safePageName === "site-log") {
                 await loadSiteLog();
             }
+
+            initialiseScrollArrows();
+
+            /*
+            Re-checks the arrows after dynamic Blog or Site Log
+            content has finished rendering.
+            */
+            requestAnimationFrame(function () {
+                document
+                    .querySelectorAll(
+                        ".blog-link-box, .site-log-scroll-box"
+                    )
+                    .forEach(updateScrollArrowStates);
+            });
         }
 
         /*
