@@ -1,0 +1,14 @@
+[
+    {
+        "file": "photos/example-01.jpg",
+        "alt": "Description of the first photograph"
+    },
+    {
+        "file": "photos/example-02.jpg",
+        "alt": "Description of the second photograph"
+    },
+    {
+        "file": "photos/example-03.jpg",
+        "alt": "Description of the third photograph"
+    }
+]
