@@ -597,6 +597,18 @@
             max-width: 760px;
         }
 
+        #page-content:has(.blog-link-box) .page-section,
+        #page-content:has(.site-log-scroll-box) .page-section {
+            height: calc(
+                100vh
+                - var(--banner-height)
+                - var(--motif-strip-height)
+            );
+
+            min-height: 0;
+            overflow: hidden;
+        }
+
         .page-content h2 {
             margin-top: 0;
             margin-bottom: 30px;
@@ -685,48 +697,72 @@
 
         /*
         ============================================================
-        SCROLLABLE BLOG DIRECTORY
+        VIEWPORT-FITTED BLOG DIRECTORY
         ============================================================
 
-        The Blog heading remains above this box.
+        The Blog directory fills the remaining visible screen space.
 
-        When the directory becomes taller than 430px,
-        a vertical scrollbar appears automatically.
+        The box still scrolls with a mouse wheel, trackpad, keyboard
+        or touch gesture, but its scrollbar remains hidden.
         */
         .blog-link-box {
             width: 100%;
-            max-height: 430px;
+
+            height: calc(
+                100vh
+                - var(--banner-height)
+                - var(--motif-strip-height)
+                - 220px
+            );
+
+            min-height: 180px;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 22px;
-            border: 1px solid #bcbcbc;
-            background-color: #ffffff;
-            scrollbar-width: thin;
-            scrollbar-color: #666666 #eeeeee;
+            padding-right: 12px;
+            border: 0;
+            background: transparent;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
         .blog-link-box::-webkit-scrollbar {
-            width: 9px;
+            display: none;
         }
 
-        .blog-link-box::-webkit-scrollbar-track {
-            background: #eeeeee;
-        }
-
-        .blog-link-box::-webkit-scrollbar-thumb {
-            background: #666666;
-        }
-
-        .blog-link-box::-webkit-scrollbar-thumb:hover {
-            background: #333333;
-        }
 
 
         /*
         ============================================================
-        SITE LOG
+        VIEWPORT-FITTED SITE LOG
         ============================================================
+
+        The Site Log fills the remaining visible screen space.
+
+        It scrolls internally without showing a scrollbar.
         */
+        .site-log-scroll-box {
+            width: 100%;
+
+            height: calc(
+                100vh
+                - var(--banner-height)
+                - var(--motif-strip-height)
+                - 265px
+            );
+
+            min-height: 180px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 12px;
+            border: 0;
+            background: transparent;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .site-log-scroll-box::-webkit-scrollbar {
+            display: none;
+        }
 
         .site-log-entry {
             padding-bottom: 26px;
@@ -749,13 +785,11 @@
             font-size: 19px;
         }
 
-        .site-log-commit-link {
-            font-size: 15px;
+        .site-log-back-link {
+            margin-top: 24px;
+            margin-bottom: 0;
         }
 
-        .site-log-back-link {
-            margin-top: 35px;
-        }
 
 
         /*
@@ -897,9 +931,40 @@
                 font-size: 17px;
             }
 
+            #page-content:has(.blog-link-box) .page-section,
+            #page-content:has(.site-log-scroll-box) .page-section {
+                height: calc(
+                    100vh
+                    - var(--mobile-banner-height)
+                    - var(--mobile-motif-strip-height)
+                );
+
+                min-height: 0;
+                overflow: hidden;
+            }
+
             .blog-link-box {
-                max-height: 360px;
-                padding: 18px;
+                height: calc(
+                    100vh
+                    - var(--mobile-banner-height)
+                    - var(--mobile-motif-strip-height)
+                    - 155px
+                );
+
+                min-height: 150px;
+                padding-right: 4px;
+            }
+
+            .site-log-scroll-box {
+                height: calc(
+                    100vh
+                    - var(--mobile-banner-height)
+                    - var(--mobile-motif-strip-height)
+                    - 205px
+                );
+
+                min-height: 150px;
+                padding-right: 4px;
             }
 
             .site-footer {
@@ -1381,19 +1446,19 @@
             <div class="page-content">
                 <h2>Site Log</h2>
 
-                <p>
-                    A record of design, layout and functionality changes
-                    made to this website.
-                </p>
+                <div class="site-log-scroll-box">
 
-                <!--
-                JavaScript loads GitHub commits beginning with SITE:
-                and inserts them into this area.
-                -->
-                <div id="site-log-list">
-                    <p class="loading-message">
-                        Loading website updates...
+                    <p>
+                        A record of design, layout and functionality changes
+                        made to this website.
                     </p>
+
+                    <div id="site-log-list">
+                        <p class="loading-message">
+                            Loading website updates...
+                        </p>
+                    </div>
+
                 </div>
 
                 <p class="site-log-back-link">
