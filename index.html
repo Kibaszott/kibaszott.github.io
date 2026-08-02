@@ -715,6 +715,42 @@
 
         /*
         ============================================================
+        SITE LOG
+        ============================================================
+        */
+
+        .site-log-entry {
+            padding-bottom: 26px;
+            margin-bottom: 26px;
+            border-bottom: 1px solid var(--subtle-border-colour);
+        }
+
+        .site-log-entry:last-child {
+            border-bottom: 0;
+        }
+
+        .site-log-date {
+            margin-bottom: 7px;
+            font-size: 15px;
+            font-style: italic;
+        }
+
+        .site-log-message {
+            margin-bottom: 8px;
+            font-size: 19px;
+        }
+
+        .site-log-commit-link {
+            font-size: 15px;
+        }
+
+        .site-log-back-link {
+            margin-top: 35px;
+        }
+
+
+        /*
+        ============================================================
         FOOTER
         ============================================================
         */
@@ -1335,18 +1371,21 @@
                 <h2>Site Log</h2>
 
                 <p>
-                    A record of changes and additions made to this website.
+                    A record of design, layout and functionality changes
+                    made to this website.
                 </p>
 
                 <!--
-                The automatic GitHub commit history will be inserted here
-                during the next stage.
+                JavaScript loads GitHub commits beginning with SITE:
+                and inserts them into this area.
                 -->
                 <div id="site-log-list">
-                    <p>Website updates will appear here.</p>
+                    <p class="loading-message">
+                        Loading website updates...
+                    </p>
                 </div>
 
-                <p>
+                <p class="site-log-back-link">
                     <a href="#miscellaneous">
                         &larr; Back to Miscellaneous
                     </a>
@@ -1665,6 +1704,165 @@
         }
 
         /*
+        ============================================================
+        AUTOMATIC SITE LOG
+        ============================================================
+
+        This reads the public GitHub commit history for the website.
+
+        Only commit messages beginning with SITE: are displayed.
+        Example:
+        SITE: Add automatic Site Log
+        */
+
+        const githubUsername = "kibaszott";
+        const githubRepository = "kibaszott.github.io";
+
+        /*
+        Prevents GitHub commit text from being interpreted as HTML.
+        */
+        function escapeHtml(value) {
+            return String(value)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        /*
+        Formats GitHub's timestamp in Sydney time.
+
+        Example:
+        2 August 2026 · 10:04 am
+        */
+        function formatSiteLogDate(dateString) {
+            return new Intl.DateTimeFormat("en-AU", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+                timeZone: "Australia/Sydney"
+            })
+                .format(new Date(dateString))
+                .replace(",", " ·")
+                .replace("am", "am")
+                .replace("pm", "pm");
+        }
+
+        /*
+        Loads up to 100 recent commits and keeps only SITE: entries.
+        */
+        async function loadSiteLog() {
+            const siteLogList = document.getElementById("site-log-list");
+
+            if (!siteLogList) {
+                return;
+            }
+
+            siteLogList.innerHTML =
+                '<p class="loading-message">Loading website updates...</p>';
+
+            try {
+                const apiUrl =
+                    "https://api.github.com/repos/" +
+                    githubUsername +
+                    "/" +
+                    githubRepository +
+                    "/commits?per_page=100";
+
+                const response = await fetch(apiUrl, {
+                    headers: {
+                        Accept: "application/vnd.github+json"
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(
+                        "GitHub returned status " + response.status
+                    );
+                }
+
+                const commits = await response.json();
+
+                const siteCommits = commits.filter(function (item) {
+                    const message =
+                        item.commit &&
+                        item.commit.message
+                            ? item.commit.message.trim()
+                            : "";
+
+                    return message.startsWith("SITE:");
+                });
+
+                if (siteCommits.length === 0) {
+                    siteLogList.innerHTML = `
+                        <p>
+                            No Site Log entries have been published yet.
+                        </p>
+
+                        <p>
+                            New entries will appear after a GitHub commit
+                            message begins with <strong>SITE:</strong>
+                        </p>
+                    `;
+                    return;
+                }
+
+                siteLogList.innerHTML = siteCommits
+                    .map(function (item) {
+                        const fullMessage =
+                            item.commit.message.trim();
+
+                        /*
+                        Uses only the first line and removes SITE:
+                        from the visitor-facing message.
+                        */
+                        const displayMessage = fullMessage
+                            .split("\n")[0]
+                            .replace(/^SITE:\s*/, "");
+
+                        const commitDate =
+                            item.commit.committer &&
+                            item.commit.committer.date
+                                ? item.commit.committer.date
+                                : item.commit.author.date;
+
+                        return `
+                            <article class="site-log-entry">
+                                <p class="site-log-date">
+                                    ${escapeHtml(
+                                        formatSiteLogDate(commitDate)
+                                    )}
+                                </p>
+
+                                <p class="site-log-message">
+                                    ${escapeHtml(displayMessage)}
+                                </p>
+
+                            </article>
+                        `;
+                    })
+                    .join("");
+            } catch (error) {
+                siteLogList.innerHTML = `
+                    <p class="error-message">
+                        The Site Log could not be loaded from GitHub.
+                    </p>
+
+                    <p>
+                        Please try refreshing the page later.
+                    </p>
+                `;
+
+                console.error(error);
+            }
+        }
+
+
+        /*
         Displays one of the main internal pages.
         */
         async function showPage(pageName) {
@@ -1695,6 +1893,10 @@
 
             if (safePageName === "blog") {
                 await loadBlogList();
+            }
+
+            if (safePageName === "site-log") {
+                await loadSiteLog();
             }
         }
 
