@@ -242,49 +242,46 @@
         ============================================================
         */
 
-        .lightbox {
-            position: fixed;
-            inset: 0;
+    .lightbox {
+    position: fixed;
+    inset: 0;
 
-            display: none;
-            overflow-y: auto;
+    display: none;
+    overflow: hidden;
 
-            padding: 34px;
+    padding: 34px;
 
-            background-color: rgba(0, 0, 0, 0.94);
-            z-index: 2000;
-        }
+    background-color: rgba(0, 0, 0, 0.94);
+    z-index: 2000;
+}
 
-        .lightbox.is-open {
-            display: block;
-        }
+.lightbox.is-open {
+    display: block;
+}
 
-        .lightbox-inner {
-            width: 100%;
-            min-height: calc(100vh - 68px);
+.lightbox-inner {
+    width: 100%;
+    height: calc(100vh - 68px);
 
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-            padding-top: 34px;
-            padding-bottom: 34px;
-        }
+.lightbox-image {
+    display: block;
 
-        .lightbox-image {
-            display: block;
+    width: auto;
+    height: auto;
 
-            /*
-            The image can be tall enough to require scrolling,
-            but never wider than the visible browser area.
-            */
-            width: auto;
-            max-width: min(1400px, calc(100vw - 68px));
-            height: auto;
+    max-width: min(1400px, calc(100vw - 68px));
+    max-height: calc(100vh - 68px);
 
-            border: 1px solid rgba(255, 255, 255, 0.24);
-            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.55);
-        }
+    object-fit: contain;
+
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.55);
+}
 
         .lightbox-close {
             position: fixed;
@@ -412,19 +409,20 @@
                 gap: 10px;
             }
 
-            .lightbox {
-                padding: 16px;
-            }
+           .lightbox {
+    padding: 16px;
+}
 
-            .lightbox-inner {
-                min-height: calc(100vh - 32px);
-                padding-top: 48px;
-                padding-bottom: 28px;
-            }
+.lightbox-inner {
+    height: calc(100vh - 32px);
+    padding-top: 44px;
+    padding-bottom: 20px;
+}
 
-            .lightbox-image {
-                max-width: calc(100vw - 32px);
-            }
+.lightbox-image {
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 96px);
+}
 
             .lightbox-close {
                 top: 12px;
