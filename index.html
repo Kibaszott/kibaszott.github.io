@@ -1538,6 +1538,10 @@
         <section class="page-section">
             <div class="page-content">
                 <h2>Site Log</h2>
+  <p>
+                            A record of design, layout and functionality changes
+                            made to this website.
+                        </p>
 
                 <div class="scroll-area-wrapper">
 
@@ -1556,11 +1560,7 @@
                         id="site-log-scroll-box"
                     >
 
-                        <p>
-                            A record of design, layout and functionality changes
-                            made to this website.
-                        </p>
-
+                      
                         <div id="site-log-list">
                             <p class="loading-message">
                                 Loading website updates...
@@ -1701,6 +1701,14 @@
         menuLinks.forEach(function (link) {
             link.addEventListener("click", function () {
                 closeMenu();
+
+                /*
+                Removes keyboard/mouse focus from the selected menu link.
+
+                Without this, the CSS :focus-within rule can keep the
+                dropdown visible even after the mouse has moved away.
+                */
+                link.blur();
 
                 /*
                 If the user selects the page they are already viewing,
