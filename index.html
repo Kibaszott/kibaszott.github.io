@@ -58,9 +58,9 @@
         :root {
             --background-colour: #ffffff;
             --text-colour: #000000;
-            --banner-colour: #000000;
+            --banner-colour: #36465E;
             --banner-text-colour: #ffffff;
-            --border-colour: #000000;
+            --border-colour: #36465E;
             --subtle-border-colour: #d6d6d6;
 
             /*
@@ -369,9 +369,9 @@
             list-style: none;
 
             background-color: white;
-            border-top: 1px solid black;
-            border-right: 1px solid black;
-            border-bottom: 1px solid black;
+            border-top: 1px solid var(--banner-colour);
+            border-right: 1px solid var(--banner-colour);
+            border-bottom: 1px solid var(--banner-colour);
 
             /*
             These settings hide the dropdown when it is closed.
@@ -434,7 +434,7 @@
         */
             .dropdown a:hover,
             .dropdown a:focus {
-            background-color: black;
+            background-color: var(--banner-colour);
             color: white;
         }
 .menu::after {
@@ -1685,6 +1685,15 @@
         is clicked or tapped.
         */
         menuButton.addEventListener("click", toggleMenu);
+
+        /*
+        On desktop, closes the menu when the mouse leaves the entire
+        hamburger/dropdown area. The existing CSS transition makes
+        the dropdown fade away smoothly.
+        */
+        menu.addEventListener("mouseleave", function () {
+            closeMenu();
+        });
 
         /*
         Closes the menu after a navigation link is selected.
