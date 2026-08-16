@@ -22,7 +22,7 @@
         :root {
             --background-colour: #ffffff;
             --text-colour: #000000;
-            --banner-colour: #000000;
+            --banner-colour: #36465E;
             --banner-text-colour: #ffffff;
             --subtle-border-colour: #d6d6d6;
             --banner-height: 80px;
@@ -108,16 +108,140 @@
             text-transform: uppercase;
         }
 
-        .back-link {
-            position: absolute;
-            left: 24px;
+        /*
+        ============================================================
+        HAMBURGER MENU
+        ============================================================
+        */
 
-            font-size: 15px;
-            letter-spacing: 0.5px;
+        .menu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: var(--banner-height);
         }
 
-        .back-link:hover {
-            opacity: 0.7;
+        .menu-button {
+            width: var(--banner-height);
+            height: var(--banner-height);
+
+            padding: 0;
+
+            background-color: var(--banner-colour);
+            color: var(--banner-text-colour);
+
+            border: 0;
+            cursor: pointer;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            gap: 7px;
+        }
+
+        .menu-button span {
+            display: block;
+            width: 30px;
+            height: 2px;
+
+            background-color: currentColor;
+
+            transition:
+                transform 0.25s ease,
+                opacity 0.25s ease;
+        }
+
+        .menu.is-open .menu-button span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        .menu.is-open .menu-button span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu.is-open .menu-button span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        /*
+        ============================================================
+        DROPDOWN MENU
+        ============================================================
+        */
+
+        .dropdown {
+            position: absolute;
+            top: var(--banner-height);
+            left: 0;
+
+            width: 230px;
+
+            margin: 0;
+            padding: 0;
+
+            list-style: none;
+
+            background-color: white;
+
+            border-top: 1px solid var(--banner-colour);
+            border-right: 1px solid var(--banner-colour);
+            border-bottom: 1px solid var(--banner-colour);
+
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+
+            transform: translateY(-6px);
+
+            transition:
+                opacity 0.45s ease,
+                visibility 0.45s ease,
+                transform 0.45s ease;
+        }
+
+        .menu:hover .dropdown,
+        .menu:focus-within .dropdown,
+        .menu.is-open .dropdown {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+
+            transform: translateY(0);
+        }
+
+        .dropdown a {
+            display: block;
+
+            font-family: "Roboto", Arial, Helvetica, sans-serif;
+            padding: 17px 22px;
+
+            color: black;
+            text-decoration: none;
+
+            border-bottom: 1px solid #d6d6d6;
+
+            transition:
+                background-color 0.2s ease,
+                color 0.2s ease;
+        }
+
+        .dropdown a:hover,
+        .dropdown a:focus {
+            background-color: var(--banner-colour);
+            color: white;
+        }
+
+        .menu::after {
+            content: "";
+            position: absolute;
+
+            top: var(--banner-height);
+            left: 0;
+
+            width: 230px;
+            height: 12px;
         }
 
         .motif-strip {
@@ -367,9 +491,23 @@
                 letter-spacing: 2px;
             }
 
-            .back-link {
-                left: 16px;
-                font-size: 14px;
+            .menu {
+                height: var(--mobile-banner-height);
+            }
+
+            .menu-button {
+                width: var(--mobile-banner-height);
+                height: var(--mobile-banner-height);
+            }
+
+            .dropdown {
+                top: var(--mobile-banner-height);
+                width: min(260px, 85vw);
+            }
+
+            .menu::after {
+                top: var(--mobile-banner-height);
+                width: min(260px, 85vw);
             }
 
             .motif-strip {
@@ -452,16 +590,65 @@
 <body>
 
     <header class="top-banner">
-        <a
-            class="back-link"
-            href="index.html#miscellaneous"
+
+        <nav
+            class="menu"
+            id="main-menu"
+            aria-label="Main navigation"
         >
-            &larr; Misc.
-        </a>
+            <button
+                class="menu-button"
+                id="menu-button"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="dropdown-menu"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <ul
+                class="dropdown"
+                id="dropdown-menu"
+            >
+                <li>
+                    <a href="index.html#home">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="index.html#about">
+                        About Me
+                    </a>
+                </li>
+
+                <li>
+                    <a href="index.html#blog">
+                        Blog
+                    </a>
+                </li>
+
+                <li>
+                    <a href="index.html#writings">
+                        Writings
+                    </a>
+                </li>
+
+                <li>
+                    <a href="index.html#miscellaneous">
+                        Misc.
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
         <h1 class="site-title">
             Photos
         </h1>
+
     </header>
 
     <div
@@ -531,6 +718,80 @@
     </footer>
 
     <script>
+        /*
+        ============================================================
+        HAMBURGER MENU CONTROLS
+        ============================================================
+        */
+
+        const menu = document.getElementById("main-menu");
+        const menuButton = document.getElementById("menu-button");
+        const menuLinks = document.querySelectorAll("#dropdown-menu a");
+
+        function toggleMenu() {
+            const isOpen = menu.classList.toggle("is-open");
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                String(isOpen)
+            );
+
+            menuButton.setAttribute(
+                "aria-label",
+                isOpen
+                    ? "Close navigation menu"
+                    : "Open navigation menu"
+            );
+        }
+
+        function closeMenu() {
+            menu.classList.remove("is-open");
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            menuButton.setAttribute(
+                "aria-label",
+                "Open navigation menu"
+            );
+        }
+
+        menuButton.addEventListener("click", toggleMenu);
+
+        /*
+        Closes the menu when the mouse leaves the whole menu area.
+        The CSS transition makes it fade away smoothly.
+        */
+        menu.addEventListener("mouseleave", function () {
+            closeMenu();
+        });
+
+        /*
+        Closes the menu after a link is selected and removes focus
+        so :focus-within does not keep the dropdown visible.
+        */
+        menuLinks.forEach(function (link) {
+            link.addEventListener("click", function () {
+                closeMenu();
+                link.blur();
+            });
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!menu.contains(event.target)) {
+                closeMenu();
+            }
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                closeMenu();
+            }
+        });
+
+
         const photoGrid =
             document.getElementById("photo-grid");
 
@@ -696,3 +957,5 @@
 </body>
 
 </html>
+photos-updated-theme-menu.html
+HTML
